@@ -24,6 +24,7 @@ Our `requirements.txt` file :
 numpy==1.19.0
 Pillow==7.2.0
 grpcio==1.30.0
+protobuf==3.12.2
 ```
 
 ## 2. Docker-compose file
