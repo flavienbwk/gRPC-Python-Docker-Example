@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package flavienbwk;
+
+service EncodeService {
+    rpc GetEncode(sourceImage) returns (transformedImage) {}
+}
+
+// input
+message sourceImage {
+    bytes image = 1; // Our numpy image (read by Pillow) under a bytes representation
+    int32 width = 2; // Width to which we want to resize our image
+    int32 height = 3; // Height to which we want to resize our image
+}
+
+// output
+message transformedImage {
+    bytes image = 1; // Our negative resized image
+}

@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+    client:
+        build: .
+        command: python3 /usr/app/client.py
+        volumes:
+            - ${PWD}/eiffel-tower.jpg:/usr/app/eiffel-tower.jpg # Our input image
+            - ${PWD}/client.py:/usr/app/client.py
+            - ./grpc_compiled:/usr/app/grpc_compiled
+
+    server:
+        build: .
+        command: python3 /usr/app/server.py
+        volumes:
+            - ${PWD}/eiffel-tower.jpg:/usr/app/eiffel-tower-transformed.jpg # Our output image
+            - ${PWD}/client.py:/usr/app/server.py
+            - ./grpc_compiled:/usr/app/grpc_compiled
