@@ -1,7 +1,5 @@
 # gRPC Python Docker example
 
-A simple gRPC communication example in Python built by Docker
-
 In this guide, we are going to build a simple gRPC client and server that take an image as input and return a negative and resized version of the image.
 
 ## 1. Dockerfile and dependencies
@@ -166,7 +164,7 @@ def image_to_negative(image: np.ndarray) -> np.ndarray:
 class EService(image_transform_pb2_grpc.EncodeServiceServicer):
 
     def GetEncode(self, request, context):
-        print("Received job !", flush=True)
+        print("Received job !")
         image = pickle.loads(request.image)
         image = image.resize((request.width, request.height))
         image_transformed = image_to_negative(image)
@@ -177,7 +175,7 @@ def serve():
     image_transform_pb2_grpc.add_EncodeServiceServicer_to_server(EService(),server)
     server.add_insecure_port('[::]:13000')
     server.start()
-    print("Server started. Awaiting jobs...", flush=True)
+    print("Server started. Awaiting jobs...")
     try:
         while True: # since server.start() will not block, a sleep-loop is added to keep alive
             time.sleep(60*60*24)
