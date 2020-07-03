@@ -7,13 +7,15 @@ services:
         command: python3 /usr/app/client.py
         volumes:
             - ${PWD}/eiffel-tower.jpg:/usr/app/eiffel-tower.jpg # Our input image
+            - ${PWD}/eiffel-tower-transformed.jpg:/usr/app/eiffel-tower-transformed.jpg # Our output image
             - ${PWD}/client.py:/usr/app/client.py
             - ./grpc_compiled:/usr/app/grpc_compiled
+        depends_on: 
+            - server
 
     server:
         build: .
         command: python3 /usr/app/server.py
         volumes:
-            - ${PWD}/eiffel-tower.jpg:/usr/app/eiffel-tower-transformed.jpg # Our output image
-            - ${PWD}/client.py:/usr/app/server.py
+            - ${PWD}/server.py:/usr/app/server.py
             - ./grpc_compiled:/usr/app/grpc_compiled

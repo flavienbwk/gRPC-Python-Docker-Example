@@ -1,5 +1,13 @@
-from PIL import Image
+from concurrent import futures
 import numpy as np
+import pickle
+import grpc
+import time
+import sys
+
+sys.path.append("/usr/app/grpc_compiled")
+import image_transform_pb2
+import image_transform_pb2_grpc
 
 def image_to_negative(image: np.ndarray) -> np.ndarray:
     """Transforms a classic image into its negative"""
@@ -13,4 +21,26 @@ def image_to_negative(image: np.ndarray) -> np.ndarray:
             negative.putpixel((i,j),(redPixel, greenPixel, bluePixel))
     return negative
 
-print("Server starting...")
+class EService(image_transform_pb2_grpc.EncodeServiceServicer):
+
+    def GetEncode(self, request, context):
+        print("Received job !", flush=True)
+        image = pickle.loads(request.image)
+        image = image.resize((request.width, request.height))
+        image_transformed = image_to_negative(image)
+        return image_transform_pb2.transformedImage(image=pickle.dumps(image_transformed))
+
+def serve():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
+    image_transform_pb2_grpc.add_EncodeServiceServicer_to_server(EService(),server)
+    server.add_insecure_port('[::]:13000')
+    server.start()
+    print("Server started. Awaiting jobs...", flush=True)
+    try:
+        while True: # since server.start() will not block, a sleep-loop is added to keep alive
+            time.sleep(60*60*24)
+    except KeyboardInterrupt:
+        server.stop(0)
+
+if __name__ == '__main__':
+    serve()
