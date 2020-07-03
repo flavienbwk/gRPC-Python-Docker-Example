@@ -72,14 +72,14 @@ service EncodeService {
 
 // input
 message sourceImage {
-    bytes image = 1; // Our numpy image in bytes (by pickle)
+    bytes image = 1; // Our numpy image in bytes (serialized by pickle)
     int32 width = 2; // Width to which we want to resize our image
     int32 height = 3; // Height to which we want to resize our image
 }
 
 // output
 message transformedImage {
-    bytes image = 1; // Our negative resized image in bytes (by pickle)
+    bytes image = 1; // Our negative resized image in bytes (serialized by pickle)
 }
 ```
 
