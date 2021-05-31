@@ -22,9 +22,9 @@ Our `requirements.txt` file :
 
 ```python-requirements
 numpy==1.19.0
-Pillow==7.2.0
-grpcio==1.30.0
-protobuf==3.12.2
+Pillow==8.1.1
+grpcio==1.38.0
+protobuf==3.17.1
 ```
 
 ## 2. Docker-compose file
@@ -32,7 +32,7 @@ protobuf==3.12.2
 To bind our local files to our container files and execute the program easily, let's create a [`docker-compose.yml`](./docker-compose.yml) file :
 
 ```yml
-version: '3'
+version: '3.3'
 
 services:
 
@@ -40,18 +40,18 @@ services:
         build: .
         command: python3 /usr/app/client.py
         volumes:
-            - ${PWD}/eiffel-tower.jpg:/usr/app/eiffel-tower.jpg # Our input image
-            - ${PWD}/eiffel-tower-transformed.jpg:/usr/app/eiffel-tower-transformed.jpg # Our output image
-            - ${PWD}/client.py:/usr/app/client.py
+            - ./input:/usr/app/input    # Our input image directory
+            - ./output:/usr/app/output  # Our output image directory
+            - ./client.py:/usr/app/client.py:ro
             - ./grpc_compiled:/usr/app/grpc_compiled
-        depends_on:
+        depends_on: 
             - server
 
     server:
         build: .
         command: python3 /usr/app/server.py
         volumes:
-            - ${PWD}/server.py:/usr/app/server.py
+            - ./server.py:/usr/app/server.py:ro
             - ./grpc_compiled:/usr/app/grpc_compiled
 ```
 
@@ -119,7 +119,7 @@ import image_transform_pb2_grpc
 def run():
     channel = grpc.insecure_channel('server:13000')
     stub = image_transform_pb2_grpc.EncodeServiceStub(channel)
-    image_np = np.array(Image.open('/usr/app/eiffel-tower.jpg'))
+    image_np = np.array(Image.open('/usr/app/input/eiffel-tower.jpg'))
     image = Image.fromarray(image_np.astype('uint8')) # Transforming np array image into Pillow's Image class
     query = image_transform_pb2.sourceImage(
         image=pickle.dumps(image),
@@ -128,7 +128,7 @@ def run():
     )
     response = stub.GetEncode(query)
     image_transformed = pickle.loads(response.image)
-    image_transformed.save('/usr/app/eiffel-tower-transformed.jpg')
+    image_transformed.save('/usr/app/output/eiffel-tower-transformed.jpg')
 
 if __name__ == "__main__":
     run()
@@ -193,6 +193,6 @@ So let's run `docker-compose up` !
 
 You will see our original `eiffel-tower.jpg` image will transform into its negative and resized version `eiffel-tower-transformed.jpg`
 
-| [eiffel-tower.jpg](./eiffel-tower.jpg) (640px / 360px) | [eiffel-tower-transformed.jpg](./eiffel-tower-transformed.jpg) (320px / 180px) |
+| [eiffel-tower.jpg](./inpupt/eiffel-tower.jpg) (640px / 360px) | [eiffel-tower-transformed.jpg](./output/eiffel-tower-transformed.jpg) (320px / 180px) |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| ![Original image](./eiffel-tower.jpg)                  | ![Transformed image](./eiffel-tower-transformed.jpg)                           |
+| ![Original image](./input/eiffel-tower.jpg)                  | ![Transformed image](./output/eiffel-tower-transformed.jpg)                           |
