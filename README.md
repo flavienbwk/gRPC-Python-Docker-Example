@@ -191,6 +191,6 @@ So let's run `docker-compose up` !
 
 You will see our original `eiffel-tower.jpg` image will transform into its negative and resized version `eiffel-tower-transformed.jpg`
 
-| [eiffel-tower.jpg](./inpupt/eiffel-tower.jpg) (640px / 360px) | [eiffel-tower-transformed.jpg](./output/eiffel-tower-transformed.jpg) (320px / 180px) |
+| [eiffel-tower.jpg](./input/eiffel-tower.jpg) (640px / 360px) | [eiffel-tower-transformed.jpg](./output/eiffel-tower-transformed.jpg) (320px / 180px) |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------ |
 | ![Original image](./input/eiffel-tower.jpg)                  | ![Transformed image](./output/eiffel-tower-transformed.jpg)                           |
