@@ -55,8 +55,6 @@ services:
             - ./grpc_compiled:/usr/app/grpc_compiled
 ```
 
-> Note : we use `${PWD}` in volumes because Docker requires absolute paths to bind single files
-
 ## 3. Defining your proto file
 
 gRPC works with `.proto` files to know which data to handle. Let's create a [`image_transform.proto`](./image_transform.proto) file :
@@ -103,7 +101,7 @@ Files `image_transform_pb2.py` and `image_transform_pb2_grpc.py` files will appe
 
 ## 5. Client
 
-Our [client.py](./client.py) file reads the image which becomes a numpy array and sends the query to the server along with the resize information. Then we save the image returned by the server in `eiffel-tower-transformed.jpg`.
+Our [client.py](./client.py) file reads the image which becomes a numpy array and sends the query to the server along with the resize information. Then we save the image returned by the server in `./output/eiffel-tower-transformed.jpg`.
 
 ```python
 from PIL import Image
